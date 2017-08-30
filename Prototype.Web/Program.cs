@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace IdentityServer.Prototype
+namespace Prototype.Web
 {
     public class Program
     {

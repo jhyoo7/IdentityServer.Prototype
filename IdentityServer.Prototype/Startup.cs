@@ -16,22 +16,30 @@ namespace IdentityServer.Prototype
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+            // AddTemporarySigningCredential is for in memory credential used to sign tokens with.
+            // Replace before production
+            services.AddIdentityServer()
+                .AddTemporarySigningCredential()
+                .AddTestUsers(Config.GetUsers())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryClients(Config.GetClients());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseIdentityServer();
+
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
